@@ -1,0 +1,22 @@
+{
+  "name": "benchmarkresearch-pws",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mart100/benchmarkResearch-PWS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mart100/benchmarkResearch-PWS/issues"
+  },
+  "homepage": "https://github.com/Mart100/benchmarkResearch-PWS#readme",
+  "dependencies": {
+    "typescript": "^4.0.3"
+  }
+}
