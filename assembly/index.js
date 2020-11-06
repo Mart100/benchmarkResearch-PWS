@@ -1,5 +1,7 @@
 "use strict";
-var balls = [];
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.calculate = void 0;
+var vec3_1 = require("./vec3");
 var Ball = /** @class */ (function () {
     function Ball(position, size) {
         this.position = position;
@@ -12,7 +14,7 @@ var Ray = /** @class */ (function () {
         this.position = position;
         this.velocity = velocity;
     }
-    Ray.prototype.getClosestBall = function () {
+    Ray.prototype.getClosestBall = function (balls) {
         var intersects = [];
         for (var _i = 0, balls_1 = balls; _i < balls_1.length; _i++) {
             var ball = balls_1[_i];
@@ -42,42 +44,18 @@ var Ray = /** @class */ (function () {
     };
     return Ray;
 }());
-$(function () {
-    startTestTypescript();
-    startTestAssemblyScript();
-});
-function startTestAssemblyScript() {
-    balls.length = 0;
-    spawnRandomBalls(10000);
-    fetch("./build/optimized.wasm").then(function (response) {
-        return response.arrayBuffer();
-    }).then(function (bytes) {
-        return WebAssembly.instantiate(bytes, { imports: {} });
-    }).then(function (results) {
-        window.add = results.instance.exports.add;
-        console.log(window.add(2, 2));
-    });
-}
-function startTestTypescript() {
-    balls.length = 0;
-    spawnRandomBalls(10000);
-    var startTime = performance.now();
+function calculate(balls) {
+    var startTime = Date.now();
     var results = [];
     // try calculate 1000 rays collision to the balls
     var rayCount = 1000;
     for (var i = 0; i < rayCount; i++) {
-        var newRay = new Ray(new Vec3().randomizeInBall(1000), new Vec3().randomizeInBall(1));
-        var closestBall = newRay.getClosestBall();
+        var newRay = new Ray(new vec3_1.Vec3().randomizeInBall(1000), new vec3_1.Vec3().randomizeInBall(1));
+        var closestBall = newRay.getClosestBall(balls);
         results.push(closestBall);
     }
-    var endTime = performance.now();
+    var endTime = Date.now();
     var timeDifference = endTime - startTime;
-    console.log(timeDifference);
-    document.write("Typescript: " + timeDifference);
+    return timeDifference;
 }
-function spawnRandomBalls(amount) {
-    for (var i = 0; i < amount; i++) {
-        var newBall = new Ball(new Vec3().randomizeInBall(1000), Math.random() * 50);
-        balls.push(newBall);
-    }
-}
+exports.calculate = calculate;

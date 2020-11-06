@@ -1,5 +1,4 @@
-
-const balls:Array<Ball> = []
+import { Vec3 } from './vec3'
 
 class Ball {
 	position: Vec3
@@ -24,9 +23,10 @@ class Ray {
 		this.velocity = velocity
 
 	}
-	getClosestBall() {
+	getClosestBall(balls:Array<Ball>) {
 		let intersects:Array<Intersect> = []
-		for(let ball of balls) {
+		for(let ballNum in balls) {
+			let ball:Ball = balls[ballNum]
 			let eye_to_centerBall = ball.position.clone().subtract(this.position)
 			let rayLength = eye_to_centerBall.dotProduct(this.velocity)
 			let rayClosestToBall = this.position.clone().plus(this.velocity.clone().setMagnitude(rayLength))
@@ -52,29 +52,8 @@ class Ray {
 	}
 }
 
-$(() => {
-	startTestTypescript()
-	startTestAssemblyScript()
-})
-
-function startTestAssemblyScript() {
-	balls.length = 0
-	spawnRandomBalls(10000)
-
-	fetch("./build/optimized.wasm").then(response =>
-		response.arrayBuffer()
-	).then(bytes => 
-			WebAssembly.instantiate(bytes, {imports: {}})
-	).then(results => {
-			window.add = results.instance.exports.add;
-			console.log(window.add(2, 2));
-	});
-}
-function startTestTypescript() {
-	balls.length = 0
-	spawnRandomBalls(10000)
-
-	let startTime = performance.now()
+export function calculate(balls:Array<Ball>) {
+  let startTime = Date.now()
 	let results = []
 
 	// try calculate 1000 rays collision to the balls
@@ -85,25 +64,12 @@ function startTestTypescript() {
 			new Vec3().randomizeInBall(1),
 		)
 
-		let closestBall = newRay.getClosestBall()
+		let closestBall = newRay.getClosestBall(balls)
 		results.push(closestBall)
 	}
 
-	let endTime = performance.now()
-	let timeDifference = endTime-startTime
-	console.log(timeDifference)
-	document.write(`Typescript: ${timeDifference}`)
-
-}
-
-
-
-function spawnRandomBalls(amount:number) : void {
-	for(let i=0;i<amount;i++) {
-		let newBall = new Ball(
-			new Vec3().randomizeInBall(1000),
-			Math.random()*50
-		)
-		balls.push(newBall)
-	}
+	let endTime = Date.now()
+  let timeDifference = endTime-startTime
+  
+  return timeDifference
 }

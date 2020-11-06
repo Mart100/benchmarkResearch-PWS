@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile": "tsc"
+    "compile": "tsc",
+    "watch": "tsc --watch",
+    "asbuild:untouched": "asc assembly/index.ts --target debug",
+    "asbuild:optimized": "asc assembly/index.ts --target release",
+    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
+    "test": "node tests"
   },
   "repository": {
     "type": "git",
@@ -17,7 +22,12 @@
   },
   "homepage": "https://github.com/Mart100/benchmarkResearch-PWS#readme",
   "dependencies": {
+    "@assemblyscript/loader": "^0.16.1",
     "@types/jquery": "^3.5.3",
+    "typed-web-workers": "^4.0.0",
     "typescript": "^4.0.3"
+  },
+  "devDependencies": {
+    "assemblyscript": "^0.16.1"
   }
 }
